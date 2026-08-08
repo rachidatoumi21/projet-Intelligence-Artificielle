@@ -1,0 +1,197 @@
+\documentclass{article}
+
+\usepackage[a4paper,left=1.5cm,right=1.5cm,top=2cm,bottom=2cm]{geometry}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{colortbl}
+\usepackage{tabularx}
+\usepackage{enumitem}
+
+\title{IFT3335 - H2026 (Rachida Toumi : 20171874)}
+\author{Bang Liu}
+\date{Avril 2026}
+
+\begin{document}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\setcounter{section}{1}
+\section{Introduction}
+Je voudrais préciser quelques points concernant le notebook. Je l’ai modifié comme suit :
+%\subsection{}
+
+1. J’ai ajouté une fonction pour le cas où la normalisation des données n’est pas autorisée, et je garde les valeurs des pixels entre 0 et 255.
+
+2. Au lieu d’entraîner chaque modèle manuellement, j’ai ajouté une boucle pour entraîner les 10 modèles d’un seul coup, j’ai sauvegardé les métriques pour chaque modèle, afin qu’elles soient tracées plus tard pour l’analyse et la comparaison.
+
+
+3. J’ai tracé cinq graphiques différents pour les 6 différentes expériences : normalisation des données, nombre de couches, taux d’apprentissage, fonctions de pertes, taille des couches cachées, et taille des minibatchs.
+
+4. J’ai fait les analyses et la comparaison des graphiques en me basant sur les questions posées dans la partie 2.
+
+5. J’ai utilisé l’IA de la manière la plus responsable possible, et je suis responsable de chaque ligne de code que j’ai ajoutée. Je suis prête à expliquer, montrer et prouver que je comprends tout ce que j’ai écrit.
+
+
+6. J’ai utilisé LaTeX pour rédiger ce rapport PDF.
+
+
+
+\section{Partie 2 }
+%\setcounter{subsection}{7}
+\subsection{Comprendre la matrice de poids}
+
+
+\begin{enumerate}
+    \item Soit $W \in \mathbb{R}^{20 \times 10}$ la matrice de poids, où $W_{j,i}$ représente la connexion du neurone $i$ de la couche $l$ vers le neurone $j$ de la couche $l+1$.  
+    Les lignes impaires de $W$ ont des poids non nuls seulement dans les colonnes $1$ à $5$, tandis que les lignes paires ont des poids non nuls seulement dans les colonnes $6$ à $10$ :
+    \[
+    W_{j,i} \neq 0
+    \quad \text{si } 
+    \begin{cases}
+    j \text{ est impair et } 1 \leq i \leq 5,\\
+    j \text{ est pair et } 6 \leq i \leq 10,
+    \end{cases}
+    \]
+    et $W_{j,i}=0$ autrement.
+
+    \item Une image de taille $28 \times 28$ donne $784$ entrées. Le nombre total de paramètres est :
+    \[
+    (784 \times 64 + 64) + (64 \times 64 + 64) + (64 \times 10 + 10)
+    \]
+    \[
+    = 50240 + 4160 + 650 = 55050.
+    \]
+    Il y a donc 55050 paramètres au total, incluant les biais.
+\end{enumerate}
+
+
+% 1.2.2 Exp´erience 1 : Normalisation des donn´ees 
+\subsection{Normalisation des données}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{21.png}
+    \includegraphics[width=\textwidth]{22.png}
+   
+    \caption{  }
+    \label{}
+\end{figure}
+
+
+D’après la figure 1, la normalisation améliore clairement l’apprentissage du modèle. 
+Le modèle \textbf{Baseline normalisé} converge de façon stable : sa précision test augmente jusqu’à \textbf{87.17\%} et sa perte test diminue jusqu’à \textbf{0.3590}. 
+Le modèle \textbf{non normalisé} est beaucoup plus instable : sa précision test fluctue fortement et termine seulement à \textbf{57.47\%}, avec une perte test de \textbf{0.9670}. 
+Les graphes montrent aussi que, sans normalisation, les courbes train/test ne s’améliorent pas régulièrement. 
+Cela s’explique par le fait que la normalisation place les pixels sur une échelle plus adaptée, ce qui stabilise les gradients et facilite l’optimisation. 
+Donc, dans cette expérience, la normalisation est essentielle pour obtenir une bonne convergence et une meilleure généralisation.
+
+%1.2.3 Exp´erience 2 : Nombre de couches
+\subsection{Nombre de couches}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{31.png}
+    \includegraphics[width=\textwidth]{32.png}
+   
+    \caption{  }
+    \label{}
+\end{figure}
+
+
+D’après la figure 2, le modèle avec \textbf{1 couche cachée (expérience 2)} performe presque comme le Baseline avec \textbf{2 couches cachées}. 
+Le Baseline termine avec \textbf{87.17\%} de précision test et une perte test de \textbf{0.3590}, tandis que l’expérience 2 termine avec \textbf{87.06\%} et une perte de \textbf{0.3605}. 
+Les graphes montrent même que l’expérience 2 apprend plus vite au début, mais les deux modèles convergent vers des performances très proches. 
+Donc, dans ce cas, ajouter une deuxième couche cachée n’améliore pas vraiment la généralisation. 
+Le nombre \textbf{70 neurones} a été choisi pour que le modèle à une seule couche ait un nombre de paramètres proche du Baseline. 
+Ainsi, la comparaison mesure surtout l’effet de la profondeur, et non simplement l’effet d’avoir plus ou moins de paramètres.
+
+
+% 1.2.4 Exp´erience 3 : Taux d’apprentissage
+\subsection{Taux d’apprentissage}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{41.png}
+    \includegraphics[width=\textwidth]{42.png}
+   
+    \caption{  }
+    \label{}
+\end{figure}
+D’après la figure 3, le taux d’apprentissage influence fortement la vitesse de convergence. 
+Avec \textbf{lr = 0.1}, l’expérience 3 apprend plus vite que le Baseline et termine légèrement mieux : \textbf{87.49\%} de précision test et \textbf{0.3470} de perte test. 
+Le Baseline avec \textbf{lr = 0.05} converge aussi bien, mais un peu plus lentement, avec \textbf{87.17\%} et \textbf{0.3590}. 
+L’expérience 4, avec un taux plus petit, apprend beaucoup plus lentement et termine seulement à \textbf{80.48\%} de précision test. 
+Les graphes montrent que ses pertes restent plus élevées pendant tout l’entraînement. 
+Donc, ici, \textbf{0.1} est le meilleur taux parmi les trois, tandis qu’un taux trop faible ralentit l’apprentissage.
+
+
+
+%1.2.5 Exp´erience 4 : Fonctions de pertes
+\subsection{Fonctions de pertes}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{51.png}
+    \includegraphics[width=\textwidth]{52.png}
+   
+    \caption{  }
+    \label{}
+\end{figure}
+D’après la figure 4, l’entropie croisée et la perte \textbf{Hinge} donnent des performances très proches en précision. 
+Le Baseline avec entropie croisée termine à \textbf{87.17\%} de précision test avec une perte test de \textbf{0.3590}. 
+L’expérience 5 avec Hinge termine presque pareil, à \textbf{87.14\%}, même si sa perte test est plus élevée \textbf{0.4618}, car l’échelle de cette perte est différente. 
+Par contre, l’expérience 6 avec \textbf{MSE} fonctionne beaucoup moins bien : elle termine seulement à \textbf{50.88\%} de précision test. 
+Même si la perte MSE semble numériquement petite, elle n’est pas directement comparable aux autres pertes. 
+Cela montre que la MSE n’est pas bien adaptée ici, car la tâche est une classification multi-classes. 
+Donc, l’entropie croisée reste le choix le plus naturel et le plus fiable pour ce problème.
+
+%1.2.6 Exp´erience 5 : Taille des couches cach´ees
+\subsection{Taille des couches cachées}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{61.png}
+    \includegraphics[width=\textwidth]{62.png}
+   
+    \caption{  }
+    \label{}
+\end{figure}
+
+D’après la figure 5, les trois modèles donnent des performances très proches, donc la taille des couches cachées a un effet limité ici. 
+Le Baseline \textbf{(64,64)} termine légèrement mieux avec \textbf{87.17\%} de précision test et \textbf{0.3590} de perte test. 
+L’expérience 7 \textbf{(48,300)} termine à \textbf{86.95\%} avec une perte de \textbf{0.3688}, et l’expérience 8 \textbf{(300,48)} termine à \textbf{86.93\%} avec une perte de \textbf{0.3652}. 
+Les graphes montrent que les trois modèles convergent de façon stable et presque au même rythme. 
+Le Baseline équilibré reste donc légèrement meilleur, mais l’écart est très petit. 
+Les tailles \textbf{48} et \textbf{300} ont été choisies pour tester des architectures déséquilibrées : une couche étroite suivie d’une couche large, puis l’inverse. 
+Cela permet d’étudier si l’ordre et la répartition de la capacité entre les couches changent la performance.
+
+
+%1.2.7 Exp´erience 6 : Taille des minibatchs
+\subsection{Taille des minibatchs}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{71.png}
+    \includegraphics[width=\textwidth]{72.png}
+   
+    \caption{  }
+    \label{}
+\end{figure}
+D’après les métriques d'entraînement et la figure 6, la comparaison est entre le \textbf{Baseline batch size = 64} et l’expérience \textbf{9 avec batch size = 2}. 
+Le petit minibatch apprend plus vite au début : sa précision test atteint déjà \textbf{81.85\%} à l’époque 1 contre \textbf{59.54\%} pour le Baseline. 
+Cependant, il est plus instable : la perte test fluctue davantage et remonte à \textbf{0.4094} à la dernière époque. 
+Le Baseline est plus régulier et termine avec une meilleure précision test : \textbf{87.17\%} contre \textbf{86.14\%} pour l’expérience 9. 
+Les courbes montrent donc qu’un petit minibatch donne des mises à jour plus fréquentes mais plus bruitées. 
+À l’inverse, un batch size plus grand donne une convergence plus stable et une meilleure généralisation finale ici.
+
+
+
+
+
+
+
+
+\end{document}
