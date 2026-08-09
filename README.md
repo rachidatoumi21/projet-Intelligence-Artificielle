@@ -49,20 +49,34 @@ Chaque image :
 
 - est en niveaux de gris ;
 - possède une résolution de `28 × 28` pixels ;
-- appartient à l’une des 10 catégories suivantes :
+- appartient à l’une des 10 catégories suivantes.
 
-```text
-T-shirt/top
-Trouser
-Pullover
-Dress
-Coat
-Sandal
-Shirt
-Sneaker
-Bag
-Ankle boot
-```
+### Aperçu des classes Fashion-MNIST
+
+<p align="center">
+  <img src="https://github.com/zalandoresearch/fashion-mnist/raw/master/doc/img/fashion-mnist-sprite.png"
+       alt="Exemples des 10 classes Fashion-MNIST"
+       width="750">
+</p>
+
+<p align="center">
+  <em>Exemples d'images Fashion-MNIST — les classes sont regroupées dans l'ordre des labels 0 à 9.</em>
+</p>
+
+| Label | Classe |
+|---:|---|
+| 0 | **T-shirt/top** |
+| 1 | **Trouser** |
+| 2 | **Pullover** |
+| 3 | **Dress** |
+| 4 | **Coat** |
+| 5 | **Sandal** |
+| 6 | **Shirt** |
+| 7 | **Sneaker** |
+| 8 | **Bag** |
+| 9 | **Ankle boot** |
+
+> Source des images : jeu de données officiel Fashion-MNIST de Zalando Research.
 
 ## Architecture de référence
 
